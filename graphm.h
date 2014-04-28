@@ -3,7 +3,7 @@
 
 #include "nodedata.h"
 #include <iostream>
-#include <climits>
+#include <limits.h>
 
 class GraphM
 {
@@ -15,8 +15,8 @@ public:
 	void insertEdge();
 	void removeEdge();
 	void findShortestPath(int[][MAXNODES], int);
-	void displayAll();
-	void display();
+	void displayAll()const;
+	void display(int,int)const;
 	void printData()const;
 	void printAdj()const;
 

@@ -25,7 +25,7 @@ int main()
    	 GraphM G;
      G.buildGraph(infile1);
      G.printData();
-     //G.printAdj();
+     G.printAdj();
 
      int doubleArray[SIZE][SIZE];
      NodeData someData[SIZE];
@@ -36,12 +36,7 @@ int main()
      //printDataArray(someData);
      //printFile(infile1);
 
-     //delete[] someData;
-    string s = "1210";
-    cout << s.at(0) << endl;
-    cout << s.at(1) << endl;
-    cout << s.at(2) << endl;
-	return 0;
+     return 0;
 }
 
 void initDoubleArray(int theArray[][SIZE])
