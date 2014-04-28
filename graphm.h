@@ -18,6 +18,7 @@ public:
 	void displayAll();
 	void display();
 	void printData()const;
+	void printAdj()const;
 
 private:
 	struct TableType
