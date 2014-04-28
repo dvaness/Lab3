@@ -12,9 +12,9 @@ public:
 	GraphM();
 	void makeEmpty();
 	void buildGraph(istream&);
-	void insertEdge();
-	void removeEdge();
-	void findShortestPath(int[][MAXNODES], int);
+	void insertEdge(int,int,int);
+	void removeEdge(int,int);
+	void findShortestPath();
 	void displayAll()const;
 	void display(int,int)const;
 	void printData()const;
