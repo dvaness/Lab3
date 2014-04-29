@@ -4,6 +4,7 @@
 #include "nodedata.h"
 #include <iostream>
 #include <limits.h>
+#include <iomanip>
 
 class GraphM
 {
@@ -21,6 +22,8 @@ public:
 	void printAdj()const;
 
 private:
+	int findMin(int)const;
+	void shortestPathHelper(int);
 	struct TableType
 	{
 		bool visited;	//whether or not the node has been visited

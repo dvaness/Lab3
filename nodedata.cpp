@@ -56,3 +56,8 @@ ostream& operator<<(ostream& output, const NodeData& nd) {
    output << nd.data;
    return output;
 }
+
+string NodeData::getData()const
+{
+   return data;
+}

@@ -25,11 +25,13 @@ int main()
    	 GraphM G;
      G.buildGraph(infile1);
      G.printData();
+     
      G.printAdj();
-
      int doubleArray[SIZE][SIZE];
      NodeData someData[SIZE];
-
+     G.findShortestPath();
+     G.displayAll();
+     
      //initDoubleArray(doubleArray);
      //buildDataArray(someData, infile1);
      //printDoubleArray(doubleArray);
