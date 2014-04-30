@@ -13,8 +13,8 @@ public:
 	GraphM();
 	void makeEmpty();
 	void buildGraph(istream&);
-	void insertEdge(int,int,int);
-	void removeEdge(int,int);
+	bool insertEdge(int,int,int);
+	bool removeEdge(int,int);
 	void findShortestPath();
 	void displayAll()const;
 	void display(int,int)const;
@@ -22,8 +22,8 @@ public:
 	void printAdj()const;
 
 private:
-	int findMin(int)const;
-	void shortestPathHelper(int);
+	void displayPath(int, int)const;
+	void displayPathNamesHelper(int,int)const;
 	struct TableType
 	{
 		bool visited;	//whether or not the node has been visited
