@@ -23,7 +23,7 @@ public:
 
 private:
 	void displayPath(int, int)const;
-	void displayPathNamesHelper(int,int)const;
+	void displayNames(int,int)const;
 	struct TableType
 	{
 		bool visited;	//whether or not the node has been visited

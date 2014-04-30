@@ -42,10 +42,15 @@ void GraphM::buildGraph(istream& infile) {
 
    infile >> size;                    // read the number of nodes
    cout << "Graph Size: " << size << endl;
-   if (infile.eof()) return;          // stop if no more data
+   if (infile.eof())
+	   {
+	   	   cout << "at end of file" << endl;
+	   	   return;          // stop if no more data
+	   }
 
    string s;                          // used to read through to end of line
    getline(infile, s);
+   cout << "s: " << s << endl;
    // read graph node information
    for (int i=1; i <= size; i++)
 	{
@@ -61,32 +66,6 @@ void GraphM::buildGraph(istream& infile) {
 	   // insert the edge into the adjacency list for fromNode
    }
 }
-
-//int GraphM::findMin(int src)const
-//{
-//	int min_index = src + 1;
-//	int min_value = T[src][src+1].dist;
-//	cout << "min_index: " << min_index << endl;
-//	cout << "min_value: " << min_value << endl;
-//	for(int i = min_index; i <= size; i++)
-//	{
-//
-//		if(!T[src][i].visited)
-//		{
-//			cout << "checking " << i << ": " <<  T[src][i].dist << endl;
-//			if(T[src][i].dist <= min_value)
-//			{
-//				min_index = i;
-//				min_value = T[src][i].dist;
-//			}
-//		}
-//	}
-//	cout << "returning " << min_index << endl;
-//	if(!T[src][min_index].visited)
-//		return min_index;
-//	else
-//		return 0;
-//}
 
 void GraphM::findShortestPath()
 {
@@ -223,22 +202,26 @@ void GraphM::displayAll()const
 
 void GraphM::display(int fromNode, int toNode)const
 {
+	cout << "path from " << fromNode << " to " << toNode << endl;
+	cout << "-----------------" << endl;
 	//if the nodes inputted are not in GraphM
 	if (fromNode > size || fromNode < 1 || toNode > size || toNode < 1)
 		return;
 
 	//display fromNode and toNode
-	cout << setw(5) << fromNode << setw(5) << toNode;
+	cout  << fromNode << setw(5) << toNode;
 
 	//display distance
 	if (T[fromNode][toNode].dist < INT_MAX) //if there is a path
-		cout << setw(10) << T[fromNode][toNode].dist;
+		cout << setw(5) << T[fromNode][toNode].dist;
 	else //if no path
-		cout << setw(10) << "----";
+		cout << setw(5) << "----";
 
 	//display pathing
+	cout << setw(5);
 	displayPath(fromNode, toNode);
 	cout << endl;
+	displayNames(fromNode, toNode);
 }
 
 void GraphM::displayPath(int source, int w)const
@@ -254,4 +237,22 @@ void GraphM::displayPath(int source, int w)const
 	{
 		cout << w << " ";
 	}
+
+}
+
+void GraphM::displayNames(int source, int w)const
+{
+	int v = T[source][w].path;
+	if(v != 0)
+	{
+		displayNames(source, v);
+		cout << data[w] << endl;
+		//cout << w << " ";
+	}
+
+	else if(source == w)
+	{
+		cout << data[w] << endl;
+	}
+
 }
