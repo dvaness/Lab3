@@ -1,68 +1,106 @@
-#include "graphl.h"
+//---------------------------------------------------------------------------
+// GRAPHL.CPP
+// Implementation for the GraphL class
+// Author: Dallas Van Ess
+//---------------------------------------------------------------------------
+// GraphL class:  includes a few functions relating to a Graph
+//   including:
+//   -- allows the graph to be built from a .txt file
+//   -- allows for insertion of edges
+//   -- includes functionality for a depth-first traversal
+//   -- includes display function for the entire graph
+//
+// Assumptions:
+//   -- assumes the .txt file being used includes correctly formatted data
+//   -- assumes that there will never be more than 100 nodes in the graph
+//
+//---------------------------------------------------------------------------
 
+#include "graphl.h"
+//-------------------------- Constructor ----------------------------------
+// Default constructor for class GraphL
+// Preconditions:   None
+// Postconditions:
+//		-- a new Graph is created. sets all Edge lists to NULL and all 
+//		   GraphNodes in the adjacency list to unvisited
+//
 GraphL::GraphL()
 {
+	size = 0;
 	for(int i = 0; i < MAXNODES; i++)
 	{
 		adjList[i].edgeHead = NULL;
+		adjList[i].visited = false;
 	}
 }
-
+//-------------------------- Destructor -----------------------------------
+// Destructor for class GraphL
+// Preconditions:   None
+// Postconditions:
+//		-- All memory allocated during runtime is returned to the OS
+//
 GraphL::~GraphL()
 {
 	makeEmpty();
 }
-
+//-------------------------- makeEmpty ------------------------------------
+// Empties the Graph of memory
+// Preconditions:   None
+// Postconditions:
+//		-- the Graph has been reset to its original state
 void GraphL::makeEmpty()
 {
-	for(int i = i; i <= size; i++)
+	EdgeNode* current = NULL;
+	for(int i = 1; i <= size; i++)
 	{
-		EdgeNode* current = adjList[i].edgeHead;
-		while(current->nextEdge != NULL)
+		while(adjList[i].edgeHead != NULL)
 		{
-			EdgeNode* temp = current;
-			current = current->nextEdge;
-			temp = NULL;
-			delete temp;
+			current = adjList[i].edgeHead->nextEdge;
+			delete adjList[i].edgeHead;
+			adjList[i].edgeHead = current;
 		}
+		
 	}
+	size = 0;
 }
-
+//-------------------------- buildGraph -----------------------------------
+// Builds the Graph
+// Preconditions:   None
+// Postconditions:
+//		-- the Graph has been built including size and adjList
 void GraphL::buildGraph(istream& infile) 
 {
    int fromNode, toNode;              // from and to node ends of edge
 
-   //makeEmpty();                       // clear the graph of memory 
+   makeEmpty();                       // clear the graph of memory 
 
    infile >> size;                    // read the number of nodes
-   cout << "Graph Size: " << size << endl;
    if (infile.eof()) return;          // stop if no more data
    
    string s;                          // used to read through to end of line
    getline(infile, s);
-   cout << s << endl;
-
+   
    // read graph node information
    for (int i=1; i <= size; i++) 
-   {
-      // read using setData of the NodeData class,
-      // something like: 
-      adjList[i].data.setData(infile);
-      // where adjList is the array of GraphNodes and
-      // data is the NodeData object inside of GraphNode
-   }
+   	{
+    	adjList[i].data.setData(infile);
+    }
 
    // read the edge data and add to the adjacency list
    for (;;) {
       infile >> fromNode >> toNode;
       if (fromNode ==0 && toNode ==0) return;     // end of edge data
-      addEdge(fromNode, toNode);
       // insert the edge into the adjacency list for fromNode
+      addEdge(fromNode, toNode);
    }
 }
-
+//-------------------------- displayGraph ---------------------------------
+// display information relating to the graph including, Node number,
+// Node name, and all edges of the Node
+//
 void GraphL::displayGraph()const
 {
+	cout << "Graph:" << endl;
 	for(int i = 1; i <= size; i++)
 	{
 		cout << "Node " << i << "	" << adjList[i].data << endl;
@@ -74,23 +112,55 @@ void GraphL::displayGraph()const
 		}
 	}
 }
-
+//-------------------------- addEdge -----------------------------------
+// insert an edge into the Graph
+// Preconditions:   None
+// Postconditions:
+//		-- a new Edge from fromNode to toNode is inserted into the 
+// 		   adjacency list
+//
 void GraphL::addEdge(int fromNode, int toNode)
 {
-	cout << "adding an edge from " << fromNode << " to " << toNode << endl;
 	EdgeNode* newNode = new EdgeNode(toNode);
-	
-	cout << newNode->adjGraphNode << endl;
 	newNode->nextEdge = adjList[fromNode].edgeHead;
-	if(newNode->nextEdge != NULL)
-		cout << newNode->nextEdge->adjGraphNode << endl;
 	adjList[fromNode].edgeHead = newNode;
 }
-
-void GraphL::printAdjListData()const
+//-------------------------- depthFirstTrav -----------------------------------
+//
+// displays the depth-first ordering of the Graph
+//
+void GraphL::depthFirstTrav()
 {
 	for(int i = 1; i <= size; i++)
 	{
-		cout << "[" << i << "]: " << adjList[i].data << endl;
+		adjList[i].visited = false;
+	}
+
+	cout << "Depth-first ordering: ";
+	for(int v = 1; v <= size; v++)
+	{
+		if(!adjList[v].visited)
+			dfs(v, adjList[v]);
+	}
+	cout << endl;
+}
+//-------------------------- dfs ------------------------------------------
+//
+// helper method for the depth-first traversal
+//
+void GraphL::dfs(int vIndex, GraphNode v)
+{
+	
+	adjList[vIndex].visited = true;
+	cout << vIndex << " ";
+	EdgeNode* current = v.edgeHead;
+	while(current != NULL)
+	{
+		if(!adjList[current->adjGraphNode].visited)
+		{
+			dfs(current->adjGraphNode, adjList[current->adjGraphNode]);
+		}
+			
+		current = current->nextEdge;	
 	}
 }

@@ -1,6 +1,34 @@
+//---------------------------------------------------------------------------
+// GRAPHM.CPP
+// Implementation of the GraphM class
+// Author: Dallas Van Ess
+//---------------------------------------------------------------------------
+// GraphM class:  includes a few functions relating to a Graph
+//   including:
+//   -- allows the graph to be built from a .txt file
+//   -- allows for insertion of edges
+//   -- allows for removal of edges
+//   -- includes functionality to find the shortest path from every node
+//	 -- to every other node in the graph
+//   -- includes display functions both for the entire graph and for a single
+//	 -- path
+//
+// Assumptions:
+//   -- assumes the .txt file being used includes correctly formatted data
+//   -- shortest path algorithm does not handle negative path costs
+//   -- assumes that there will never be more than 100 nodes in the graph
+//
+//---------------------------------------------------------------------------
+
 #include "graphm.h"
-
-
+//-------------------------- Constructor ----------------------------------
+// Default constructor for class GraphM
+// Preconditions:   None
+// Postconditions:
+//		-- a new Graph is created. sets size to 0, all values of the
+//		-- adjacency matrix to INT_MAX(infinity), and properly 
+//		-- initializes all members of the TableType structs in
+//		-- the T array
 GraphM::GraphM()
 {
 	size = 0;
@@ -17,7 +45,11 @@ GraphM::GraphM()
 
 	}
 }
-
+//-------------------------- makeEmpty ------------------------------------
+// Empties the Graph of memory
+// Preconditions:   None
+// Postconditions:
+//		-- the Graph has been reset to its original state
 void GraphM::makeEmpty()
 {
 	for(int i = 1; i <= size; i++)
@@ -34,14 +66,18 @@ void GraphM::makeEmpty()
 	}
 	size = 0;
 }
-
+//-------------------------- buildGraph -----------------------------------
+// Builds the Graph
+// Preconditions:   None
+// Postconditions:
+//		-- the Graph has been built including size and adjMatrix
 void GraphM::buildGraph(istream& infile) {
    int fromNode, toNode, distance;              // from and to node ends of edge
 
    makeEmpty();                       // clear the graph of memory
 
    infile >> size;                    // read the number of nodes
-   cout << "Graph Size: " << size << endl;
+   
    if (infile.eof())
 	   {
 	   	   cout << "at end of file" << endl;
@@ -50,7 +86,7 @@ void GraphM::buildGraph(istream& infile) {
 
    string s;                          // used to read through to end of line
    getline(infile, s);
-   cout << "s: " << s << endl;
+   
    // read graph node information
    for (int i=1; i <= size; i++)
 	{
@@ -61,12 +97,18 @@ void GraphM::buildGraph(istream& infile) {
    for (;;) {
 	   infile >> fromNode >> toNode >> distance;
 	   if (fromNode ==0 && toNode ==0) return;     // end of edge data
-	   if(fromNode > 0 && fromNode <= size && toNode > 0 && toNode <= size)
+	   if(fromNode <= size && toNode <= size)
 	   adjMatrix[fromNode][toNode] = distance;
 	   // insert the edge into the adjacency list for fromNode
    }
 }
-
+//-------------------------- findShortestPath -----------------------------
+// use Dijakstra's algorithm to find the shortest path from every node to 
+// every other node
+// Preconditions:   None
+// Postconditions:  
+//		-- the TableType array is modified with correct values for the dist
+//		   member and the path member.
 void GraphM::findShortestPath()
 {
 	for (int source = 1; source <= size; source++) {
@@ -114,39 +156,12 @@ void GraphM::findShortestPath()
 			for (int j = 1; j <= size; j++)
 				T[i][j].visited = false;
 }
-
-
-
-void GraphM::printData()const
-{
-	for(int i = 0; i <= size; i++)
-	{
-		cout << data[i] << endl;
-	}
-}
-
-void GraphM::printAdj()const
-{
-	for(int i = 1; i <= size; i++)
-	{
-		// if(T[i][i].visited == true)
-		// 	cout << "Visited." << endl;
-		// else
-		// 	cout << "Not visited." << endl;
-		for(int j = 1; j <= size; j++)
-		{
-			if(adjMatrix[i][j] != INT_MAX)
-			{
-				cout << "[" << i << ", " << j << "]: " << adjMatrix[i][j] << endl;
-			// if(T[i][j].visited == true)
-			// 	cout << "Visited." << endl;
-			// else
-			// 	cout << "Not visited." << endl;
-			}
-		}
-	}
-}
-
+//-------------------------- insertEdge -----------------------------------
+// insert an edge into the Graph
+// Preconditions:   None
+// Postconditions:
+//		-- a new Edge from fromNode to toNode with a weight of distance
+//		   is inserted into the adjacency matrix
 bool GraphM::insertEdge(int fromNode, int toNode, int distance)
 {
 	if(fromNode > size || fromNode < 1 || toNode > size || toNode < 1)
@@ -156,7 +171,12 @@ bool GraphM::insertEdge(int fromNode, int toNode, int distance)
 		return true;
 
 }
-
+//-------------------------- removeEdge -----------------------------------
+// remove an edge from the Graph
+// Preconditions:   None
+// Postconditions:
+//		-- the edge from fromNode to toNode is removed from the adjacency 
+//		   matrix
 bool GraphM::removeEdge(int fromNode, int toNode)
 {
 	if(fromNode > size || fromNode < 1 || toNode > size || toNode < 1)
@@ -166,9 +186,13 @@ bool GraphM::removeEdge(int fromNode, int toNode)
 	return true;
 
 }
-
+//-------------------------- displayAll -----------------------------------
+// display a formatted table showing starting node, ending node, the
+// shortest path from the starting node to the ending node, and the path
+// connected to the shortest path.
 void GraphM::displayAll()const
 {
+	cout << endl;
 	cout << "Description         From node   To node   Dijkstra's   Path"
 		     << endl;
 
@@ -199,7 +223,9 @@ void GraphM::displayAll()const
 		cout << endl;//extra blank line
 
 }
-
+//-------------------------- display --------------------------------------
+// display the path from one node to another found through the shortest
+// path function
 void GraphM::display(int fromNode, int toNode)const
 {
 	cout << "path from " << fromNode << " to " << toNode << endl;
@@ -223,7 +249,10 @@ void GraphM::display(int fromNode, int toNode)const
 	cout << endl;
 	displayNames(fromNode, toNode);
 }
-
+//-------------------------- displayPath ----------------------------------
+//
+// helper method for displaying a single path
+//
 void GraphM::displayPath(int source, int w)const
 {
 	int v = T[source][w].path;
@@ -239,7 +268,10 @@ void GraphM::displayPath(int source, int w)const
 	}
 
 }
-
+//-------------------------- displayNames -------------------------------------
+//
+// helper method for displaying the NodeData objects for a path
+//
 void GraphM::displayNames(int source, int w)const
 {
 	int v = T[source][w].path;
