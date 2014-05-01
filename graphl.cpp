@@ -129,7 +129,7 @@ void GraphL::addEdge(int fromNode, int toNode)
 //
 // displays the depth-first ordering of the Graph
 //
-void GraphL::depthFirstTrav()
+void GraphL::depthFirstSearch()
 {
 	for(int i = 1; i <= size; i++)
 	{

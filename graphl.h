@@ -100,7 +100,7 @@ public:
 	//
 	// displays the depth-first ordering of the Graph
 	//
-	void depthFirstTrav();
+	void depthFirstSearch();
 	
 private:
 	//-------------------------- dfs ------------------------------------------
